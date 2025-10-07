@@ -3,281 +3,961 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RProblems - Solving the Unsolvable</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>RProblems // Future Lab</title>
+    <meta name="theme-color" content="#08090c">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #05070b;
+            --bg-alt: #08090c;
+            --surface: rgba(15, 18, 30, 0.75);
+            --surface-strong: rgba(18, 21, 35, 0.92);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #7b61ff;
+            --accent-soft: rgba(123, 97, 255, 0.12);
+            --accent-2: #35e0ff;
+            --accent-3: #ff6bcb;
+            --text: #e9ecff;
+            --text-dim: rgba(233, 236, 255, 0.64);
+            --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(123, 97, 255, 0.12), transparent 45%),
+                        radial-gradient(circle at 80% 0%, rgba(53, 224, 255, 0.18), transparent 50%),
+                        var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        .navbar {
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -120px;
+            background: var(--noise);
+            pointer-events: none;
+            mix-blend-mode: screen;
+            z-index: -1;
         }
-        .hero {
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            height: 100vh;
+
+        .ambient {
+            position: fixed;
+            filter: blur(120px);
+            opacity: 0.6;
+            z-index: -2;
+        }
+
+        .ambient:nth-child(1) {
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.4), transparent 60%);
+            top: -18vw;
+            right: -10vw;
+        }
+
+        .ambient:nth-child(2) {
+            width: 32vw;
+            height: 32vw;
+            background: radial-gradient(circle, rgba(53, 224, 255, 0.35), transparent 60%);
+            bottom: -14vw;
+            left: -12vw;
+        }
+
+        .ambient:nth-child(3) {
+            width: 26vw;
+            height: 26vw;
+            background: radial-gradient(circle, rgba(255, 107, 203, 0.28), transparent 60%);
+            top: 40vh;
+            right: 10vw;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1120px, 92%);
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(24px);
+            background: rgba(5, 7, 11, 0.75);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-inner {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 0;
+        }
+
+        .nav-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .nav-brand span {
+            color: var(--accent-2);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-link {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: radial-gradient(circle at top, rgba(123, 97, 255, 0.25), rgba(5, 7, 11, 0.85));
+            border-radius: 12px;
+            color: var(--text);
+            align-items: center;
             justify-content: center;
+            cursor: pointer;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            background: rgba(123, 97, 255, 0.12);
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.73rem;
+            letter-spacing: 0.16em;
+        }
+
+        .hero {
+            padding: 140px 0 120px;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 32px;
+        }
+
+        .hero-primary {
+            display: grid;
+            gap: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.8rem, 3.8vw + 1.2rem, 5rem);
+            font-weight: 700;
+            line-height: 1.04;
+        }
+
+        .hero-title span {
+            color: var(--accent-2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            max-width: 560px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .hero-dynamic {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(53, 224, 255, 0.12);
+            color: var(--accent-2);
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+        }
+
+        #hero-rotate {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            transition: opacity 0.32s ease;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 12px;
+            padding: 14px 26px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, rgba(123, 97, 255, 0.95), rgba(53, 224, 255, 0.95));
+            color: #05070b;
+            box-shadow: 0 15px 40px rgba(123, 97, 255, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 22px 46px rgba(123, 97, 255, 0.45);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: var(--text);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(53, 224, 255, 0.6);
+            color: var(--accent-2);
+            transform: translateY(-1px);
+        }
+
+        .hero-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .hero-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            min-height: 140px;
+            display: grid;
+            gap: 18px;
+            transition: transform 0.35s ease, border-color 0.35s ease;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(123, 97, 255, 0.45);
+        }
+
+        .hero-card h4 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            color: rgba(233, 236, 255, 0.56);
+        }
+
+        .hero-card p {
+            margin: 0;
+            font-size: 1.6rem;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .ticker {
+            margin-top: 50px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .ticker::before,
+        .ticker::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+        }
+
+        .ticker::before {
+            left: 0;
+            background: linear-gradient(90deg, var(--bg-alt), rgba(8, 9, 12, 0));
+        }
+
+        .ticker::after {
+            right: 0;
+            background: linear-gradient(-90deg, var(--bg-alt), rgba(8, 9, 12, 0));
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 48px;
+            width: max-content;
+            padding: 18px 0;
+            animation: ticker 26s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.78rem;
+            color: rgba(233, 236, 255, 0.6);
+        }
+
+        .ticker-item span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(233, 236, 255, 0.45);
+        }
+
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-header {
+            max-width: 640px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 2.5vw + 1rem, 3.1rem);
+            margin: 0;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-top: 56px;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            display: grid;
+            gap: 18px;
+            min-height: 220px;
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(123, 97, 255, 0.22), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(123, 97, 255, 0.45);
+            background: var(--surface-strong);
+        }
+
+        .glass-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .card-body {
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            padding: 0.3rem 0.9rem;
+            color: rgba(233, 236, 255, 0.75);
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+        }
+
+        .pill::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-2);
+        }
+
+        .signal-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+        }
+
+        .drops-grid {
+            position: relative;
+            gap: 32px;
+        }
+
+        .drop-card {
+            padding: 32px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(130deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(24px);
+            display: grid;
+            gap: 20px;
+            min-height: 280px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s ease, border-color 0.35s ease;
+        }
+
+        .drop-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 0%, rgba(53, 224, 255, 0.25), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .drop-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(53, 224, 255, 0.45);
+        }
+
+        .drop-card:hover::after {
+            opacity: 1;
+        }
+
+        .drop-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: rgba(233, 236, 255, 0.55);
+        }
+
+        .drop-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            margin: 0;
+        }
+
+        .drop-body {
+            margin: 0;
+            color: var(--text-dim);
+            line-height: 1.75;
+        }
+
+        .drop-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .drop-tag {
+            background: rgba(123, 97, 255, 0.16);
+            color: var(--accent);
+            border-radius: 999px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .os-wrapper {
+            margin-top: 64px;
+            display: grid;
+            gap: 32px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+            display: grid;
+            gap: 26px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(123, 97, 255, 0.6), rgba(53, 224, 255, 0.1));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 26px 28px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 10, 16, 0.72);
+            backdrop-filter: blur(20px);
+            display: grid;
+            gap: 14px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(6px);
+            border-color: rgba(123, 97, 255, 0.42);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 34px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(123, 97, 255, 1), rgba(123, 97, 255, 0.1));
+            box-shadow: 0 0 0 8px rgba(123, 97, 255, 0.12);
+        }
+
+        .timeline-item h3 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+        }
+
+        .timeline-item p {
+            margin: 0;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .contact-card {
+            margin-top: 64px;
+            border-radius: 26px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: clamp(28px, 6vw, 48px);
+            background: linear-gradient(135deg, rgba(123, 97, 255, 0.16), rgba(5, 7, 11, 0.92));
+            display: grid;
+            gap: 20px;
+            text-align: center;
+            backdrop-filter: blur(18px);
+        }
+
+        .contact-card h3 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 2.2vw + 1rem, 3rem);
+        }
+
+        .contact-card p {
+            margin: 0;
+            color: rgba(233, 236, 255, 0.72);
+            line-height: 1.7;
+        }
+
+        .footer {
+            padding: 64px 0 48px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(5, 7, 11, 0.85);
+        }
+
+        .footer-grid {
+            display: grid;
+            gap: 24px;
             text-align: center;
         }
-        .hero h1 {
-            font-size: 4.5rem;
-            font-weight: 700;
+
+        .footer-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            color: rgba(233, 236, 255, 0.58);
         }
-        .hero p {
-            font-size: 1.5rem;
+
+        .footer a {
+            color: rgba(233, 236, 255, 0.64);
         }
-        .section {
-            padding: 80px 0;
+
+        .footer a:hover {
+            color: var(--accent-2);
+        }
+
+        .section-animate {
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        .section.visible {
+
+        .section-animate.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2.5rem;
-            font-weight: 600;
+
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
         }
-        .flip-card {
-            background-color: transparent;
-            perspective: 1000px;
-            height: 250px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .flip-card-front {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-        }
-        .flip-card-back {
-            background-color: #00ffff;
-            color: #000;
-            transform: rotateY(180deg);
-        }
-        .project-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .project-card h3 {
-            color: #00ffff;
-        }
-        .btn-primary {
-            background-color: #00ffff;
-            border-color: #00ffff;
-            color: #000;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #00cccc;
-            border-color: #00cccc;
-            transform: scale(1.05);
-        }
-        .footer {
-            background-color: #000000;
-            padding: 40px 0;
-            text-align: center;
-        }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @media (max-width: 768px) {
+
+        @media (max-width: 920px) {
+            .nav-menu {
+                position: absolute;
+                inset: 74px 0 auto 0;
+                background: rgba(5, 7, 11, 0.95);
+                display: grid;
+                padding: 18px;
+                gap: 18px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                transform: translateY(-20px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .nav-menu.open {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: all;
+            }
+
+            .nav-toggle {
+                display: inline-flex;
+            }
+
             .hero {
-                height: auto;
+                padding: 120px 0 100px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-meta {
+                grid-template-columns: 1fr;
+            }
+
+            section {
                 padding: 100px 0;
             }
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            .hero p {
-                font-size: 1.2rem;
-            }
-            .section {
-                padding: 60px 0;
-            }
-            .flip-card {
-                margin-bottom: 30px;
+
+            .ticker-track {
+                animation-duration: 18s;
             }
         }
     </style>
 </head>
 <body>
+    <div class="ambient"></div>
+    <div class="ambient"></div>
+    <div class="ambient"></div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">RProblems</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+    <nav class="nav">
+        <div class="container nav-inner">
+            <a href="#home" class="nav-brand">RProblems <span>//Lab</span></a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="7" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#about">Who We Are</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#work">Our Work</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#approach">Our Approach</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Join Us</a></li>
-                </ul>
+            <div class="nav-menu" id="nav-menu">
+                <a class="nav-link" href="#home">Home</a>
+                <a class="nav-link" href="#signals">Signals</a>
+                <a class="nav-link" href="#drops">Drops</a>
+                <a class="nav-link" href="#os">Operating System</a>
+                <a class="nav-link" href="#contact">Join</a>
             </div>
         </div>
     </nav>
 
     <header class="hero" id="home">
-        <div class="container">
-            <h1>Solving the Unsolvable</h1>
-            <p>We tackle the most challenging problems in technology for a better future.</p>
-            <a href="#contact" class="btn btn-primary btn-lg mt-3">Join the Mission</a>
+        <div class="container hero-grid">
+            <div class="hero-primary section-animate">
+                <span class="chip">Future problems only</span>
+                <h1 class="hero-title">We engineer <span>improbable futures</span> for teams that dare to ship what others won’t.</h1>
+                <p class="hero-subtitle">RProblems is a strike team of researchers, designers, and builders deploying unconventional systems for the problems everyone else avoids. We are the lab you call when the brief says “impossible.”</p>
+                <div class="hero-dynamic">
+                    Hot focus:
+                    <span id="hero-rotate">Urban Systems</span>
+                </div>
+                <div class="hero-cta">
+                    <a class="btn btn-primary" href="#contact">Start a Problem</a>
+                    <a class="btn btn-ghost" href="#drops">See Latest Drops</a>
+                </div>
+            </div>
+
+            <div class="hero-meta section-animate">
+                <div class="hero-card">
+                    <h4>Signal Strength</h4>
+                    <p>11 Active Missions</p>
+                </div>
+                <div class="hero-card">
+                    <h4>Impact Field</h4>
+                    <p>$2.3B+</p>
+                </div>
+                <div class="hero-card">
+                    <h4>Carbon Offset</h4>
+                    <p>482K t/yr</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container ticker section-animate">
+            <div class="ticker-track">
+                <div class="ticker-item"> Climate Resilience <span></span></div>
+                <div class="ticker-item"> Autonomous Infrastructure <span></span></div>
+                <div class="ticker-item"> Planetary Defense <span></span></div>
+                <div class="ticker-item"> Synthetic Bio Systems <span></span></div>
+                <div class="ticker-item"> Post-Cloud Compute <span></span></div>
+                <div class="ticker-item"> Zero Trust Everything <span></span></div>
+                <div class="ticker-item"> High Velocity Teams <span></span></div>
+                <div class="ticker-item"> Climate Resilience <span></span></div>
+                <div class="ticker-item"> Autonomous Infrastructure <span></span></div>
+                <div class="ticker-item"> Planetary Defense <span></span></div>
+            </div>
         </div>
     </header>
 
-    <section id="about" class="section">
-        <div class="container">
-            <h2 class="section-title">Who We Are</h2>
-            <div class="row">
-                <div class="col-md-8 mx-auto text-center">
-                    <p>RProblems is a research and engineering collective dedicated to solving the world's most complex challenges. We aren't a traditional company; we are a mission-driven organization focused on creating groundbreaking, scalable solutions to problems that have long been considered unsolvable. Our work is defined by a relentless pursuit of innovation and a deep commitment to making a lasting positive impact on humanity.</p>
+    <section id="signals">
+        <div class="container section-animate">
+            <div class="section-header">
+                <span class="pill">Signals in the noise</span>
+                <h2>A collective of contrarian builders chasing generational unlocks.</h2>
+                <p class="signal-text">We operate like an independent studio—small, fast, relentlessly curious. We merge applied research with full-stack engineering to prototype new realities, then hand the playbook to teams ready to scale the impact.</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="glass-card">
+                    <h3 class="card-title">Zero bureaucracy</h3>
+                    <p class="card-body">We run lean pods with direct access to decision makers, so cycles go to breakthroughs, not status reports.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">Deep conviction</h3>
+                    <p class="card-body">Select missions only. When we commit, we embed with your team until the system is in the wild and delivering.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">Creative rigor</h3>
+                    <p class="card-body">Machine intuition meets human taste. Fewer decks, more experiments, relentlessly stress-tested by real data.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="work" class="section bg-dark">
-        <div class="container">
-            <h2 class="section-title">Our Work</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="project-card h-100">
-                        <h3>AI-Driven Cloud Optimization</h3>
-                        <p>Developed a platform that analyzes complex cloud architectures to autonomously reduce costs by over 40% while simultaneously cutting carbon emissions, enabling sustainable scaling for enterprise-level infrastructure.</p>
+    <section id="drops">
+        <div class="container section-animate">
+            <div class="section-header">
+                <span class="pill">Latest drops</span>
+                <h2>Launching weird bets that evolve into market-defining machines.</h2>
+                <p>Each drop is a bespoke build partnered with founders, civic operators, or fortune 100 skunkworks chasing asymmetrical advantage.</p>
+            </div>
+
+            <div class="grid drops-grid">
+                <article class="drop-card">
+                    <div class="drop-meta">
+                        <span>Drop 00A</span>
+                        <span>2025</span>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="project-card h-100">
-                        <h3>Industrial IoT Security Fabric</h3>
-                        <p>Engineered a zero-trust security platform for large-scale industrial IoT networks, protecting critical infrastructure from cyber-physical threats by providing end-to-end encryption and anomaly detection for millions of endpoints.</p>
+                    <h3 class="drop-title">Atmos mission control for distributed climate sensors.</h3>
+                    <p class="drop-body">Unified telemetry, anomaly detection, and autonomous field maintenance across 36 nations. Result: 41% faster climate interventions.</p>
+                    <div class="drop-tags">
+                        <span class="drop-tag">climate</span>
+                        <span class="drop-tag">ai ops</span>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="project-card h-100">
-                        <h3>High-Performance Team Dynamics</h3>
-                        <p>Pioneered a data-driven methodology for assembling and scaling elite engineering and research teams, analyzing collaboration patterns and skill synergies to maximize creative output and problem-solving velocity.</p>
+                </article>
+
+                <article class="drop-card">
+                    <div class="drop-meta">
+                        <span>Drop 00B</span>
+                        <span>2024</span>
+                    </div>
+                    <h3 class="drop-title">Ghost mesh: zero-trust fabric for industrial IoT.</h3>
+                    <p class="drop-body">Rebuilt legacy control systems with cryptographic mesh networking that isolates threats in under 40ms. Adopted by 7 of the top 20 ports.</p>
+                    <div class="drop-tags">
+                        <span class="drop-tag">security</span>
+                        <span class="drop-tag">edge</span>
+                    </div>
+                </article>
+
+                <article class="drop-card">
+                    <div class="drop-meta">
+                        <span>Drop 00C</span>
+                        <span>2024</span>
+                    </div>
+                    <h3 class="drop-title">Velocity opsOS for high-performing R&amp;D crews.</h3>
+                    <p class="drop-body">Dynamic talent orchestration, real-time knowledge routing, and rituals that turned 5 siloed teams into an 18-week moonshot success.</p>
+                    <div class="drop-tags">
+                        <span class="drop-tag">teams</span>
+                        <span class="drop-tag">ops</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="os">
+        <div class="container section-animate">
+            <div class="section-header">
+                <span class="pill">Operating system</span>
+                <h2>Our playbook is part studio, part skunkworks, wholly allergic to average.</h2>
+                <p>From first-principles research to live-fire deployments, every engagement is built to move from speculation to shipped reality fast.</p>
+            </div>
+
+            <div class="os-wrapper">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Deep immersion sprints</h3>
+                        <p>We embed for 21-day dives to map constraints, unveil hidden leverage, and define the intervention worth betting on.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Compound prototyping</h3>
+                        <p>We run parallel tracks—hardware, software, human ops—to pressure test the solution stack before it hits scale.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Impact handoff</h3>
+                        <p>We stay embedded through launch, co-authoring the operating playbook so your teams inherit momentum, not technical debt.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="approach" class="section">
-        <div class="container">
-            <h2 class="section-title">Our Approach</h2>
-            <div class="row text-center">
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Deep Focus</h3>
-                            </div>
-                            <div class="flip-card-back">
-                                <p>We dive deep into a single, complex problem at a time, dedicating our full attention and resources to finding a solution.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>First Principles</h3>
-                            </div>
-                            <div class="flip-card-back">
-                                <p>We deconstruct problems to their fundamental truths and re-examine them from the ground up, enabling radical new solutions.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <h3>Impact-Driven</h3>
-                            </div>
-                            <div class="flip-card-back">
-                                <p>Our success is measured by the impact we have. We are committed to creating technologies that will shape the future for the better.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <section id="contact">
+        <div class="container section-animate">
+            <div class="contact-card">
+                <h3>Bring us the problem they warned you about.</h3>
+                <p>We partner with founders, public sector renegades, and forward-obsessed teams. Drop a signal and we’ll orbit back within 72 hours.</p>
+                <a class="btn btn-primary" href="mailto:mission@rproblems.com">mission@rproblems.com</a>
             </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section bg-dark">
-        <div class="container text-center">
-            <h2 class="section-title">Join the Mission</h2>
-            <p class="lead">We are always looking for brilliant minds to join our cause. If you are passionate about solving the unsolvable, we want to hear from you.</p>
-            <a href="mailto:mission@rproblems.com" class="btn btn-primary btn-lg mt-3">Contact Us</a>
         </div>
     </section>
 
     <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 RProblems. All Rights Reserved.</p>
-            <p>Los Angeles, CA</p>
+        <div class="container footer-grid">
+            <span class="footer-brand">RProblems // Los Angeles</span>
+            <span>© 2025 RProblems. Building improbable futures from LA to everywhere.</span>
+            <a href="#home">Back to top</a>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const sections = document.querySelectorAll('.section');
+        const toggler = document.querySelector('.nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        const dynamicWords = ['Urban Systems', 'Deeptech Infra', 'Earth Ops', 'Defense Tech', 'Climate Resilience'];
+        const rotateTarget = document.getElementById('hero-rotate');
+        let index = 0;
+
+        if (toggler && menu) {
+            toggler.addEventListener('click', () => {
+                const state = menu.classList.toggle('open');
+                toggler.setAttribute('aria-expanded', state.toString());
+            });
+
+            menu.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.remove('open');
+                    toggler.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        if (rotateTarget) {
+            setInterval(() => {
+                index = (index + 1) % dynamicWords.length;
+                rotateTarget.style.opacity = '0';
+                setTimeout(() => {
+                    rotateTarget.textContent = dynamicWords[index];
+                    rotateTarget.style.opacity = '1';
+                }, 220);
+            }, 2600);
+        }
+
+        const animatedSections = document.querySelectorAll('.section-animate');
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
-        sections.forEach(section => {
-            observer.observe(section);
-        });
+        }, { threshold: 0.2 });
+
+        animatedSections.forEach(section => observer.observe(section));
     </script>
 </body>
 </html>
