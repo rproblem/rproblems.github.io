@@ -1,0 +1,57 @@
+.role-hero { padding: clamp(3.5rem, 7vw, 6rem) 0 3.5rem; border-bottom: 1px solid var(--border); }
+.role-hero h1 { max-width: 24ch; margin-bottom: 1.2rem; }
+.role-hero .lead { max-width: 68ch; margin-bottom: 2rem; }
+.role-employer, .card-employer { color: var(--teal); font-size: .9rem; }
+.back-link { display: inline-block; margin-bottom: 2.8rem; text-decoration: none; color: var(--text-muted); font-size: .85rem; }
+.back-link:hover, .source-note a:hover { color: var(--teal-light); }
+.role-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 5rem; padding-block: 4rem; align-items: start; }
+.role-copy section + section { margin-top: 3rem; }
+.role-copy h2, .role-facts h2 { font-size: 1.65rem; }
+.role-list { padding-left: 1.2rem; color: #c7ccc7; }
+.role-list li { padding-left: .5rem; margin-bottom: 1rem; }
+.role-list li::marker { color: var(--teal); }
+.role-facts { padding: 2rem; border: 1px solid var(--border-hover); border-radius: var(--radius); background: var(--bg-alt); }
+.role-facts dl { margin: 0 0 1.8rem; }
+.role-facts dl > div { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.role-facts dt { color: var(--text-muted); font-size: .75rem; letter-spacing: .04em; margin-bottom: .3rem; }
+.role-facts dd { margin: 0; line-height: 1.5; font-size: .95rem; }
+.role-facts .btn { width: 100%; }
+.contact-note { font-size: .75rem; color: var(--text-muted); margin: 1rem 0 0; }
+.source-note { border-top: 1px solid var(--border); padding-top: 2rem; color: var(--text-muted); font-size: .85rem; }
+.source-note h2 { color: var(--text); }
+.source-note a { text-underline-offset: 4px; }
+.other-roles { border-top: 1px solid var(--border); padding-block: 3rem 5rem; }
+.related-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.related-links a { display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; }
+.related-links a:hover { border-color: var(--teal); }
+.jobs-intro { border: 0; padding-bottom: 2rem; }
+.jobs-intro h1 { font-size: clamp(3rem, 6.5vw, 5rem); }
+.index-meta { display: flex; gap: 2rem; color: var(--teal); font-size: .8rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 3rem; }
+.jobs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; padding-bottom: 4rem; }
+.job-card { display: flex; flex-direction: column; padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--bg-alt); border: 1px solid var(--border); border-radius: var(--radius); }
+.job-card:hover { border-color: var(--border-hover); }
+.job-card h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: .8rem; }
+.job-card h2 a { text-decoration: none; }
+.card-summary { color: var(--text-muted); font-size: .95rem; }
+.card-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; margin-top: auto; padding: 1.5rem 0; font-size: .8rem; border-bottom: 1px solid var(--border); }
+.card-meta strong { font-weight: 500; color: var(--teal); }
+.job-link { display: flex; justify-content: space-between; padding-top: 1.2rem; text-decoration: none; font-weight: 700; font-size: .9rem; }
+.jobs-contact { border-top: 1px solid var(--border); padding-block: 3rem 5rem; display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+.jobs-contact p:last-child { color: var(--text-muted); margin-bottom: 0; }
+.jobs-page a:focus-visible, .jobs-page button:focus-visible { outline: 2px solid var(--teal-light); outline-offset: 5px; }
+.jobs-page .site-nav [aria-current="page"] { color: var(--teal-light); }
+@media (max-width: 900px) { .role-layout { gap: 2.5rem; grid-template-columns: minmax(0, 1fr) 300px; } }
+@media (max-width: 700px) {
+  .role-layout, .jobs-grid, .related-links { grid-template-columns: 1fr; }
+  .role-layout { gap: 3rem; padding-block: 2.5rem; }
+  .role-facts { grid-row: 1; }
+  .jobs-contact { flex-direction: column; align-items: flex-start; }
+  .index-meta { flex-wrap: wrap; gap: .5rem 1.5rem; }
+  .role-hero { padding-top: 2.5rem; }
+}
+@media print {
+  .site-header, .site-footer, .other-roles, .btn, .contact-note, .back-link { display: none; }
+  .jobs-page { background: white; color: black; }
+  .role-layout { display: block; }
+  .role-facts, .role-list, .source-note, .lead, .role-employer { color: black; background: white; }
+}
