@@ -55,3 +55,9 @@
   .role-layout { display: block; }
   .role-facts, .role-list, .source-note, .lead, .role-employer { color: black; background: white; }
 }
+
+/* Long-form role descriptions */
+.role-copy p { color: #c7ccc7; line-height: 1.85; }
+.role-copy .role-list strong { color: var(--text); font-weight: 700; }
+.role-apply { border-top: 1px solid var(--border); padding-top: 2rem; }
+@media print { .role-copy p, .role-copy .role-list strong { color: black; } }
